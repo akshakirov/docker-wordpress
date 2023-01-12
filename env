@@ -1,0 +1,5 @@
+MYSQL_SERVER_NAME=mysql
+MYSQL_ROOT_PASSWORD=password
+MYSQL_USER=wordpress
+MYSQL_PASSWORD=password
+

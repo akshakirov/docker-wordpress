@@ -1,0 +1,56 @@
+version: '3.6'
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: ${MYSQL_SERVER_NAME}
+    restart: always
+    env_file: .env
+    environment:
+      - "MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}"
+      - "MYSQL_USER=${MYSQL_USER}"
+      - "MYSQL_PASSWORD=${MYSQL_PASSWORD}"
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "${MYSQL_SERVER_NAME}"]
+      timeout: 10s
+      retries: 10
+    volumes: 
+      - ./mysql:/var/lib/mysql
+    command: '--default-authentication-plugin=mysql_native_password'
+    networks:
+      - app-network
+  php-fpm-8.2.1:
+    image: php:8.2.1-fpm-alpine
+    container_name: php-fpm-8.2.1
+    restart: unless-stopped
+    volumes:
+      - ./wordpress:/var/www/html
+#      - ./conf/php/php.ini:/usr/local/etc/php/php.ini
+    networks:
+      - app-network
+  nginx:
+    image: nginx:stable
+    container_name: nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    volumes:
+      - ./wordpress:/var/www/html
+      - ./conf/nginx:/etc/nginx/conf.d
+      - certbot:/etc/letsencrypt
+    networks:
+      - app-network
+  certbot:
+    depends_on:
+      - nginx
+    image: certbot/certbot
+    container_name: certbot
+    volumes:
+      - certbot:/etc/letsencrypt
+      - ./wordpress:/var/www/html
+    command: certonly --webroot --webroot-path=/var/www/html --email artur@shakirov.com --agree-tos --no-eff-email --staging -d wp.eth.su
+volumes:
+  certbot:
+networks:
+  app-network:
+    driver: bridge
