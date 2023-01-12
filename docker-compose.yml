@@ -20,7 +20,7 @@ services:
     networks:
       - app-network
   php-fpm-8.2.1:
-    image: php:8.2.1-fpm-alpine
+    image: php:8.2.1-fpm
     container_name: php-fpm-8.2.1
     restart: unless-stopped
     volumes:
