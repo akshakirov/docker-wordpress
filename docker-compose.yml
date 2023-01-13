@@ -20,11 +20,13 @@ services:
     networks:
       - app-network
   php-fpm-8.2.1:
-    image: php:8.2.1-fpm
+    build: 
+      context: .
+      dockerfile: Dockerfile
     container_name: php-fpm-8.2.1
     restart: unless-stopped
     volumes:
-      - ./wordpress:/var/www/html
+      - ./wordpress:/var/www/html:rw
 #      - ./conf/php/php.ini:/usr/local/etc/php/php.ini
     networks:
       - app-network
@@ -32,10 +34,11 @@ services:
     image: nginx:stable
     container_name: nginx
     restart: unless-stopped
+    hostname: nginx
     ports:
       - "80:80"
     volumes:
-      - ./wordpress:/var/www/html
+      - ./wordpress:/var/www/html:rw
       - ./conf/nginx:/etc/nginx/conf.d
       - certbot:/etc/letsencrypt
     networks:
