@@ -1,7 +1,7 @@
 # wordpress
 
 ```
-git clone  ssh://git@gitlab.eth.su:222/web/wordpress.git 
+git clone  ssh://git@github.com:akshakirov/docker-wordpress.git
 ```
 
 ```
@@ -13,7 +13,7 @@ cd ..
 ```
 
 ```
-git remote add origin ssh://git@gitlab.eth.su:222/web/wordpress.git 
+git remote add origin ssh://git@github.com:akshakirov/docker-wordpress.git
 git add .
 git commit -m "added clean wordpress distro"
 git push 
